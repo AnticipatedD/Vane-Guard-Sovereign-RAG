@@ -422,9 +422,11 @@ Founder, **Vane Enterprise LLC**
 
 ---
 
+---
+
 ### 🛡️ Looking for Enterprise AI Security & RAG Governance?
 Secure your infrastructure using the official **Vane-Guard Sovereign Framework (v1.0)** blueprint. Protect your system root IDs, eliminate hallucinations, and access editable production diagrams instantly.
-👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://gumroad.com)**
+👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dantevane.gumroad.com/l/enterprise)**
 
 ---
 
