@@ -393,7 +393,7 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 - **GitHub Issues**: [Report Bugs](https://github.com/AnticipatedD/Vane-guard-sovereign-orchestrator/issues)
 - **Documentation**: [Vane Enterprise Portal](https://vane-enterprise.github.io)
 - **Gumroad**: [Purchase Framework](https://dantevane.gumroad.com/l/Vane-Guard)
-
+- 👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dantevane.gumroad.com/l/enterprise)**
 ---
 
 ## 👨‍💼 Author
