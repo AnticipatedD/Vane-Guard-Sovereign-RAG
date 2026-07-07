@@ -392,8 +392,8 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 - **Email**: [harigov63@gmail.com](mailto:harigov63@gmail.com)
 - **GitHub Issues**: [Report Bugs](https://github.com/AnticipatedD/Vane-guard-sovereign-orchestrator/issues)
 - **Documentation**: [Vane Enterprise Portal](https://vane-enterprise.github.io)
-- **Gumroad**: [Purchase Framework](https://dantevane.gumroad.com/l/Vane-Guard)
-- 👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dantevane.gumroad.com/l/enterprise)**
+- **Gumroad**: [Purchase Framework](https://dvane.gumroad.com/l/Vane-Guard)
+- 👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dvane.gumroad.com/l/enterprise)**
 ---
 
 ## 👨‍💼 Author
@@ -426,7 +426,7 @@ Founder, **Vane Enterprise LLC**
 
 ### 🛡️ Looking for Enterprise AI Security & RAG Governance?
 Secure your infrastructure using the official **Vane-Guard Sovereign Framework (v1.0)** blueprint. Protect your system root IDs, eliminate hallucinations, and access editable production diagrams instantly.
-👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dantevane.gumroad.com/l/enterprise)**
+👉 **[Get the Sovereign AI Security Framework Toolkit on Gumroad Now](https://dvane.gumroad.com/l/enterprise)**
 
 ---
 
