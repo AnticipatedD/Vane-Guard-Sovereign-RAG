@@ -389,7 +389,7 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 ## 📞 Support & Contact
 
-- **Email**: [harigov63@gmail.com](mailto:harigov63@gmail.com)
+- **Email**: [harigov63@gmail.com](mailto:harigov63@gmail.com) or [mdabulhossain1008@gmail.com](mailto:mdabulhossain1008@gmail.com)
 - **GitHub Issues**: [Report Bugs](https://github.com/AnticipatedD/Vane-guard-sovereign-orchestrator/issues)
 - **Documentation**: [Vane Enterprise Portal](https://vane-enterprise.github.io)
 - **Gumroad**: [Purchase Framework](https://dvane.gumroad.com/l/Vane-Guard)
@@ -398,11 +398,11 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 ## 👨‍💼 Author
 
-**Vane-Guard** - Offshore Architecture Engineer & Entrepreneur  
+**MD ABUL HOSSAIN** - Offshore Architecture Engineer & Entrepreneur  
 Founder, **Vane Enterprise LLC**
 
 - 🌐 **GitHub**: [@AnticipatedD](https://github.com/AnticipatedD)
-- 📧 **Email**: harigov63@gmail.com
+- 📧 **Email**: harigov63@gmail.com OR mdabulhossain1008@gmail.com
 - 💼 **Alternative GitHub**: [@myou260312-eng](https://github.com/myou260312-eng)
 
 ---
