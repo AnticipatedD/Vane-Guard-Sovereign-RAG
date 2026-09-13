@@ -27,7 +27,7 @@ interface FilterItem {
 	label: string;
 }
 
-function FilterDropdown({
+export function FilterDropdown({
 	label,
 	items,
 	selected,
@@ -118,7 +118,7 @@ const sortOptions = [
 	{ value: "oldest", label: "Oldest first" },
 ];
 
-function SortSelect({
+export function SortSelect({
 	sortOrder,
 	onChange,
 }: {
