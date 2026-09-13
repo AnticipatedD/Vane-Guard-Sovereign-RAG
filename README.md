@@ -24,3 +24,41 @@ A documentation and developer portal built with **Astro**, **Starlight**, **Reac
 
 ```bash
 pnpm install --frozen-lockfile
+
+The dev server listens on port 1111 (see Astro config). # Build 
+```bash
+pnpm run build
+```
+# Checks and tests 
+```bash
+pnpm run check
+pnpm run lint
+pnpm run format:core:check
+pnpm test -- --run
+pnpm exec vitest run --coverage --project Node --project Astro
+```
+# Environment variablesCopy the example file and fill in values as needed:
+```bash
+cp .env.example .env
+```
+Never commit a real `.env file`. Public client-side search settings use PUBLIC_* variables (see .env.example). 
+Docker (optional) 
+```bash
+docker compose up --build
+```
+# This builds the site and serves the production build. For local editing with hot reload, prefer pnpm dev on the host.
+
+# Repository layout  text.
+├── .github/workflows/ # CI
+├── bin/ # Build and repo utilities
+├── src/ # Components, content, utils
+├── worker/ # Cloudflare Worker entry
+├── astro.config.ts
+├── package.json
+├── pnpm-lock.yaml
+└── vitest.config.ts
+
+# Security 
+Do not hardcode API keys in source.
+Use .env / CI secrets / Cloudflare secrets for credentials.
+If a key was ever committed, rotate it immediately. License See [LICENSE](license.md) in this repository.
