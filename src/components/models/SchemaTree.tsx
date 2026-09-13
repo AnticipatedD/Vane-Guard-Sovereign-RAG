@@ -29,7 +29,7 @@ interface SchemaNodeProps {
 }
 
 // Highlight matching text in search
-function highlightMatch(text: string, searchTerm: string): React.ReactNode {
+export function highlightMatch(text: string, searchTerm: string): React.ReactNode {
 	if (!searchTerm || !text) return text;
 
 	const lowerText = text.toLowerCase();
@@ -50,7 +50,7 @@ function highlightMatch(text: string, searchTerm: string): React.ReactNode {
 }
 
 // Check if a row or its children match the search
-function matchesSearch(row: SchemaRowData, searchTerm: string): boolean {
+export function matchesSearch(row: SchemaRowData, searchTerm: string): boolean {
 	if (!searchTerm) return true;
 
 	const lower = searchTerm.toLowerCase();
@@ -66,7 +66,7 @@ function matchesSearch(row: SchemaRowData, searchTerm: string): boolean {
 }
 
 // Get all node IDs that should be expanded due to search match in children
-function getExpandedForSearch(
+export function getExpandedForSearch(
 	rows: SchemaRowData[],
 	searchTerm: string,
 ): Set<string> {
