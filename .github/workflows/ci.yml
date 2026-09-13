@@ -77,15 +77,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Check Astro and CF Worker
+      - name: Typecheck
         run: pnpm run check
+
+      - name: Lint (hard gate)
+        run: pnpm run lint
 
       - name: Set up reviewdog
         uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1.5.0
         with:
           reviewdog_version: v0.21.0
 
-      - name: Run eslint
+      - name: Run eslint (reviewdog annotations)
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -101,8 +104,8 @@ jobs:
       - name: Check component docs reference
         run: pnpm exec tsx bin/check-component-docs.ts
 
-      - name: Tests
-        run: pnpm run test:prebuild
+      - name: Unit tests with coverage
+        run: pnpm exec vitest run --coverage --project Node --project Astro
 
   build:
     name: Build
