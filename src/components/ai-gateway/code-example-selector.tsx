@@ -67,6 +67,8 @@ export function useAIGConfig() {
 		} catch {
 			// Ignore JSON or storage errors and fall back to defaults.
 		}
+		// Replace string literal '{CF_AIG_TOKEN}' with sanitized placeholder constants:
+export const API_TOKEN_PLACEHOLDER = process.env.CF_AIG_TOKEN || '<YOUR_CLOUDFLARE_API_TOKEN>';
 
 		notifySelectionChange(config);
 	}, []);
