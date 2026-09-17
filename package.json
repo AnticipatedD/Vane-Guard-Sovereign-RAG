@@ -40,6 +40,14 @@
 		"ai-setup:copilot": "pnpm run ai-setup:import-from-opencode && rulesync generate --targets copilot --features commands,subagents",
 		"prepare": "husky"
 	},
+	{
+  "dependencies": {
+    "astro": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.0"
+  }
+}
 	"devDependencies": {
 		"@actions/core": "3.0.1",
 		"@actions/github": "9.1.1",
