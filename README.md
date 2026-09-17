@@ -46,6 +46,14 @@ Docker (optional)
 ```bash
 docker compose up --build
 ```
+## Offline Testing Guide
+
+This repository enforces offline-first testing guarantees. You can run the entire test suite on a fresh clone without configuring external Cloudflare network credentials or `.env` files:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm test -- --run
+```
 # This builds the site and serves the production build. For local editing with hot reload, prefer pnpm dev on the host.
 
 # Repository layout  text.
