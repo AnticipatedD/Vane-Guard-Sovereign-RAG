@@ -11,6 +11,7 @@
 		"check": "pnpm run check:astro && pnpm run check:worker",
 		"check:astro": "astro check",
 		"check:worker": "tsc --noEmit -p ./worker/tsconfig.json",
+		"typecheck": "pnpm run check",
 		"predev": "tsx bin/fetch-skills.ts --soft",
 		"dev": "astro dev",
 		"format": "pnpm run format:core:fix && pnpm run format:data",
@@ -25,6 +26,7 @@
 		"start": "astro dev",
 		"sync": "astro sync",
 		"test": "vitest",
+		"test:ci": "vitest run --coverage",
 		"test:prebuild": "vitest --project Node --project Astro",
 		"test:postbuild": "vitest --project Workers",
 		"flue:dev": "flue dev --env .env.local",
@@ -40,14 +42,12 @@
 		"ai-setup:copilot": "pnpm run ai-setup:import-from-opencode && rulesync generate --targets copilot --features commands,subagents",
 		"prepare": "husky"
 	},
-	{
-  "dependencies": {
-    "astro": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "zod": "^3.22.0"
-  }
-}
+	"dependencies": {
+		"astro": "^4.0.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"zod": "^3.22.0"
+	},
 	"devDependencies": {
 		"@actions/core": "3.0.1",
 		"@actions/github": "9.1.1",
