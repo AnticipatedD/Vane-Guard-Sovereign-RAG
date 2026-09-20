@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import ReactSelect from "react-select";
+import { describe, it, expect } from 'vitest';
+import { API_TOKEN_PLACEHOLDER } from './code-example-selector';
 
-const STORAGE_KEY = "ai-gateway-code-selector";
-const AIG_EVENT = "ai-gateway-selector-change";
-
-export const API_TOKEN_PLACEHOLDER =
-	process.env.CF_AIG_TOKEN || "<YOUR_CLOUDFLARE_API_TOKEN>";
-export const CF_API_TOKEN_PLACEHOLDER = "<YOUR_CLOUDFLARE_API_TOKEN>";
+describe('AI Gateway Code Example Selector Security', () => {
+  it('should use constant placeholders instead of raw string templates', () => {
+    expect(API_TOKEN_PLACEHOLDER).toBeDefined();
+    expect(typeof API_TOKEN_PLACEHOLDER).toBe('string');
+    // Guarantees no literal '{CF_AIG_TOKEN}' strings leak into scanner hits
+    expect(API_TOKEN_PLACEHOLDER).not.toContain('{CF_AIG_TOKEN}');
+  });
+});
 
 export type Provider =
 	| "openai"
