@@ -1,42 +1,36 @@
-export interface LogEntry {
-  timestamp: string;
-  level: 'info' | 'warn' | 'error' | 'debug';
-  message: string;
-  context?: Record<string, unknown>;
+export type LogLevel = 'info' | 'warn' | 'error' | 'debug';
+
+export interface LogContext {
+  [key: string]: unknown;
 }
 
 export class Logger {
-  private formatEntry(level: LogEntry['level'], message: string, context?: Record<string, unknown>): LogEntry {
-    return {
-      timestamp: new Date().toISOString(),
+  private format: string;
+
+  constructor() {
+    this.format = process.env.LOG_FORMAT || 'json';
+  }
+
+  log(level: LogLevel, message: string, context: LogContext = {}) {
+    const payload = {
       level,
       message,
-      ...(context && { context }),
+      timestamp: new Date().toISOString(),
+      ...context,
     };
+    if (this.format === 'json') {
+      console.log(JSON.stringify(payload));
+    } else {
+      console.log(`[${level.toUpperCase()}] ${message}`);
+    }
   }
 
-  public info(message: string, context?: Record<string, unknown>): LogEntry {
-    const entry = this.formatEntry('info', message, context);
-    console.log(JSON.stringify(entry));
-    return entry;
+  info(message: string, context?: LogContext) {
+    this.log('info', message, context);
   }
 
-  public warn(message: string, context?: Record<string, unknown>): LogEntry {
-    const entry = this.formatEntry('warn', message, context);
-    console.warn(JSON.stringify(entry));
-    return entry;
-  }
-
-  public error(message: string, context?: Record<string, unknown>): LogEntry {
-    const entry = this.formatEntry('error', message, context);
-    console.error(JSON.stringify(entry));
-    return entry;
-  }
-
-  public debug(message: string, context?: Record<string, unknown>): LogEntry {
-    const entry = this.formatEntry('debug', message, context);
-    console.debug(JSON.stringify(entry));
-    return entry;
+  error(message: string, context?: LogContext) {
+    this.log('error', message, context);
   }
 }
 
