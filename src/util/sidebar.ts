@@ -104,7 +104,7 @@ export async function generateSidebar(group: Group) {
 
 	const NO_LLM_RESOURCES = new Set(["docs-for-agents"]);
 
-	if (group.entries[0].type === "link" && !NO_LLM_RESOURCES.has(group.label)) {
+	if (group.entries[0]?.type === "link" && !NO_LLM_RESOURCES.has(group.label)) {
 		group.entries[0].label = "Overview";
 	}
 
@@ -156,7 +156,7 @@ function setSidebarCurrentEntry(
 ): boolean {
 	for (const entry of sidebar) {
 		if (entry.type === "link") {
-			if (entry.attrs["data-external-link"]) {
+			if (entry.attrs?.["data-external-link"]) {
 				continue;
 			}
 
@@ -184,7 +184,7 @@ function setSidebarCurrentEntry(
 		const flattened = flattenSidebar(sidebar)
 			.filter(
 				(link) =>
-					link.attrs["data-hide-children"] && pathname.startsWith(link.href),
+					link.attrs?.["data-hide-children"] && pathname.startsWith(link.href),
 			)
 			.at(0);
 
@@ -266,11 +266,11 @@ async function handleGroup(group: Group): Promise<SidebarEntry> {
 		};
 	}
 
-	for (const entry of group.entries.keys()) {
-		if (group.entries[entry].type === "group") {
-			group.entries[entry] = await handleGroup(group.entries[entry] as Group);
+	for (const entryKey of group.entries.keys()) {
+		if (group.entries[entryKey].type === "group") {
+			group.entries[entryKey] = await handleGroup(group.entries[entryKey] as Group);
 		} else {
-			group.entries[entry] = await handleLink(group.entries[entry] as Link);
+			group.entries[entryKey] = await handleLink(group.entries[entryKey] as Link);
 		}
 	}
 
@@ -284,15 +284,15 @@ async function handleGroup(group: Group): Promise<SidebarEntry> {
 
 	const removed = group.entries.splice(idx, 1).at(0) as Link;
 
-	removed.attrs = {
-		"data-group-label": group.label,
-	};
-
 	if (!removed) {
 		throw new Error(
 			`[Sidebar] Failed to splice ${index.href} in ${group.label}`,
 		);
 	}
+
+	removed.attrs = {
+		"data-group-label": group.label,
+	};
 
 	if (!frontmatter.sidebar.group?.hideIndex) {
 		removed.order = 0;
@@ -389,15 +389,15 @@ export const lookupProductTitle = async (product: string, module: string) => {
 };
 
 export function sortBySidebarOrder(a: any, b: any): number {
-	const aOrder = a.order ?? a.data.sidebar.order;
-	const aLabel = a.label ?? a.data.title;
+	const aOrder = a.order ?? a.data?.sidebar?.order ?? Number.MAX_VALUE;
+	const aLabel = a.label ?? a.data?.title ?? "";
 
-	const bOrder = b.order ?? b.data.sidebar.order;
-	const bLabel = b.label ?? b.data.title;
+	const bOrder = b.order ?? b.data?.sidebar?.order ?? Number.MAX_VALUE;
+	const bLabel = b.label ?? b.data?.title ?? "";
 
 	if (aOrder !== bOrder) return aOrder - bOrder;
 
 	const collator = new Intl.Collator("en");
 
 	return collator.compare(aLabel, bLabel);
-}
+			}
