@@ -8,9 +8,10 @@ export async function fetchSkillsData(): Promise<void> {
 
   console.log("Checking environment credentials for skill sync layer...");
 
-  // Force an offline soft fallback loop if environment values are missing
-  if (!token || !accountId || process.argv.includes('--soft')) {
-    console.warn("⚠️ API keys missing or --soft flag detected. Loading offline fallback payload...");
+  // Force an offline soft fallback loop if environment values are missing or offline flag passed
+  const isSoftMode = process.argv.includes('--soft') || process.argv.includes('--offline');
+  if (!token || !accountId || isSoftMode) {
+    console.warn("⚠️ API keys missing or soft/offline mode detected. Loading offline fallback payload...");
     const fallbackData = {
       skills: ["Core ML Systems", "Vector Search Optimization", "Distributed Infrastructure Orchestration"],
       syncedAt: new Date().toISOString(),
@@ -23,14 +24,17 @@ export async function fetchSkillsData(): Promise<void> {
 
   // Authentic fetch pipeline execution branch when tokens exist
   try {
-    const response = await fetch(`https://cloudflare.com{accountId}/ai/skills`, {
-      headers: { Authorization: `Bearer ${token}` }
+    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/skills`, {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
     });
     if (!response.ok) throw new Error(`HTTP network error code: ${response.status}`);
     const data = await response.json();
+    fs.mkdirSync(path.dirname(targetPath), { recursive: true });
     fs.writeFileSync(targetPath, JSON.stringify(data, null, 2));
+    console.log("Successfully synced skills from Cloudflare API.");
   } catch (error) {
     console.error("Network sync failure, dropping back to soft initialization:", error);
+    fs.mkdirSync(path.dirname(targetPath), { recursive: true });
     fs.writeFileSync(targetPath, JSON.stringify({ skills: [], fallback: true }, null, 2));
   }
 }
