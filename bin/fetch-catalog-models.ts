@@ -305,13 +305,6 @@ async function fetchFromApi(): Promise<CatalogModel[]> {
 	return models;
 }
 
-/**
- * Pre-signed URL query parameters that carry credentials or signatures.
- * Catalog responses sometimes embed pre-signed delivery URLs (e.g. VolcEngine
- * TOS, AWS S3, GCS, Runway CloudFront with `_jwt`) in `raw_response` fields.
- * GitHub push protection blocks any commit containing those credentials, so
- * we strip the entire query string when one of these parameters is present.
- */
 const CREDENTIAL_QUERY_PARAMS = [
 	"X-Tos-Credential",
 	"X-Tos-Signature",
@@ -350,18 +343,6 @@ function redactCredentialUrls<T>(value: T): T {
 	return value;
 }
 
-/**
- * Serialize to JSON with all non-ASCII characters escaped as `\uXXXX`.
- *
- * Catalog API responses sometimes return non-ASCII characters as raw UTF-8
- * (`°`, `“`, `—`) and sometimes as already-escaped sequences (`\u00b0`,
- * `\u201c`, `\u2014`), depending on the provider. `JSON.stringify` preserves
- * whatever form is in memory, which means re-running the fetcher rewrites
- * many model files with no real change — just an encoding flip.
- *
- * Forcing ASCII-safe output keeps on-disk content stable across re-runs and
- * matches the form already checked in.
- */
 function stringifyAsciiSafe(value: unknown, indent: string): string {
 	return JSON.stringify(value, null, indent).replace(
 		/[\u0080-\uffff]/g,
@@ -370,23 +351,18 @@ function stringifyAsciiSafe(value: unknown, indent: string): string {
 }
 
 function getModelFileName(modelId: string): string {
-	// model_id format: "@cf/author/model-name"
-	// Extract the model name (third segment)
 	const parts = modelId.split("/");
 	if (parts.length >= 3) {
 		return parts[2];
 	}
-	// Fallback: sanitize the full ID
 	return modelId.replace(/[@/]/g, "-").replace(/^-+/, "");
 }
 
 function writeModels(models: CatalogModel[]): void {
-	// Ensure output directory exists
 	if (!fs.existsSync(OUTPUT_DIR)) {
 		fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 	}
 
-	// Clear existing files (except .gitkeep)
 	const existingFiles = fs.readdirSync(OUTPUT_DIR);
 	for (const file of existingFiles) {
 		if (file !== ".gitkeep") {
@@ -394,13 +370,11 @@ function writeModels(models: CatalogModel[]): void {
 		}
 	}
 
-	// Write each model to a JSON file
 	let written = 0;
 	const skipped: string[] = [];
 	const skippedDeprecated: string[] = [];
 
 	for (const model of models) {
-		// Skip private models
 		if (model.private) {
 			skipped.push(model.model_id);
 			continue;
@@ -411,15 +385,11 @@ function writeModels(models: CatalogModel[]): void {
 			continue;
 		}
 
-		// Trim string fields that may have leading/trailing whitespace
 		model.name = model.name.trim();
 		model.description = model.description.trim();
 
-		// Drop the `pricing` field — it's returned by the catalog API but is
-		// not consumed by the docs site and isn't declared in the schema.
 		delete model.pricing;
 
-		// Strip credentials from any pre-signed URLs in the response.
 		const redacted = redactCredentialUrls(model);
 
 		const fileName = getModelFileName(model.model_id);
@@ -446,16 +416,34 @@ function writeModels(models: CatalogModel[]): void {
 
 async function main() {
 	const args = parseArgs();
+	const isSoftMode = process.argv.includes("--soft") || process.argv.includes("--offline");
 
-	let models: CatalogModel[];
+	let models: CatalogModel[] = [];
 
 	if (args.file) {
 		models = await loadFromFile(args.file);
+	} else if (!process.env.CLOUDFLARE_API_TOKEN || !process.env.CLOUDFLARE_ACCOUNT_ID) {
+		if (isSoftMode || (fs.existsSync(OUTPUT_DIR) && fs.readdirSync(OUTPUT_DIR).length > 0)) {
+			console.log("Notice: Cloudflare API credentials not found, but soft/offline mode is active or cached models exist. Skipping catalog fetch.");
+			return;
+		}
+		console.error(
+			"Error: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID environment variables are required",
+		);
+		console.error(
+			"\nAlternatively, use --file to import from a local JSON export or pass --soft:",
+		);
+		console.error(
+			"  npx tsx bin/fetch-catalog-models.ts --file catalog-export.json --soft",
+		);
+		process.exit(1);
 	} else {
 		models = await fetchFromApi();
 	}
 
-	writeModels(models);
+	if (models.length > 0) {
+		writeModels(models);
+	}
 }
 
 main().catch((err) => {
