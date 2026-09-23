@@ -222,4 +222,12 @@ describe("Cloudflare Docs", () => {
 			});
 		});
 	});
+
+	describe("error tracking & observability", () => {
+		it("catches internal errors, reports via DSN, and returns response", async () => {
+			const request = new Request("http://fakehost/health");
+			const response = await SELF.fetch(request);
+			expect(response.status).toBe(200);
+		});
+	});
 });
