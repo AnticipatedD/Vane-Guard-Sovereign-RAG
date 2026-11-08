@@ -1,48 +1,52 @@
-import React, { useState } from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+import { RagIngest } from './RagIngest';
 
-export interface RagIngestProps {
-  onIngestSuccess?: (data: { source: string }) => void;
-  onIngestError?: (error: Error) => void;
-}
+describe('RagIngest Component', () => {
+    it('renders input field and submit button', () => {
+        render(<RagIngest />);
+        expect(screen.getByLabelText(/data source url \/ path/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /ingest document/i })).toBeInTheDocument();
+    });
 
-export const RagIngest: React.FC<RagIngestProps> = ({ onIngestSuccess, onIngestError }) => {
-  const [source, setSource] = useState('');
-  const [loading, setLoading] = useState(false);
+    it('disables submit button when input is empty', () => {
+        render(<RagIngest />);
+        const button = screen.getByRole('button', { name: /ingest document/i });
+        expect(button).toBeDisabled();
+    });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!source.trim()) return;
+    it('calls onIngestSuccess when ingestion succeeds', async () => {
+        const handleSuccess = vi.fn();
+        render(<RagIngest onIngestSuccess={handleSuccess} />);
 
-    setLoading(true);
-    try {
-      if (source === 'trigger-error') {
-        throw new Error('Ingestion pipeline failed');
-      }
-      const payload = { source: source.trim() };
-      if (onIngestSuccess) onIngestSuccess(payload);
-      setSource('');
-    } catch (err) {
-      const errorObj = err instanceof Error ? err : new Error('Unknown error');
-      if (onIngestError) onIngestError(errorObj);
-    } finally {
-      setLoading(false);
-    }
-  };
+        const input = screen.getByLabelText(/data source url \/ path/i);
+        fireEvent.change(input, { target: { value: 'https://example.com/source' } });
 
-  return (
-    <form onSubmit={handleSubmit} data-testid="rag-ingest-form">
-      <label htmlFor="rag-source-input">Data Source URL / Path</label>
-      <input
-        id="rag-source-input"
-        type="text"
-        value={source}
-        onChange={(e) => setSource(e.target.value)}
-        placeholder="Enter data source..."
-        disabled={loading}
-      />
-      <button type="submit" disabled={loading || !source.trim()}>
-        {loading ? 'Ingesting...' : 'Ingest Document'}
-      </button>
-    </form>
-  );
-};
+        const button = screen.getByRole('button', { name: /ingest document/i });
+        expect(button).not.toBeDisabled();
+
+        fireEvent.click(button);
+
+        await waitFor(() => {
+            expect(handleSuccess).toHaveBeenCalledTimes(1);
+            expect(handleSuccess).toHaveBeenCalledWith({ source: 'https://example.com/source' });
+        });
+    });
+
+    it('calls onIngestError when ingestion fails', async () => {
+        const handleError = vi.fn();
+        render(<RagIngest onIngestError={handleError} />);
+
+        const input = screen.getByLabelText(/data source url \/ path/i);
+        fireEvent.change(input, { target: { value: 'trigger-error' } });
+
+        const button = screen.getByRole('button', { name: /ingest document/i });
+        fireEvent.click(button);
+
+        await waitFor(() => {
+            expect(handleError).toHaveBeenCalledTimes(1);
+            expect(handleError).toHaveBeenCalledWith(expect.any(Error));
+        });
+    });
+});
